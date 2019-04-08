@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+ namespace: default
+ name: pvvol-1
+
+spec:
+ capacity:
+  storage: 100Mi
+ accessModes:
+  - ReadWriteMany
+ persistentVolumeReclaimPolicy: Retain
+ nfs:
+  path: /opt/ckad/nfsvol
+  server: 192.168.10.237
+  readOnly: false

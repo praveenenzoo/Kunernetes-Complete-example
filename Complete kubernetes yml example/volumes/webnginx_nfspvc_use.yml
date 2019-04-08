@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+ name: nfsclaimpod
+
+
+spec:
+ volumes:
+  - name: vol1   # this name can be any thing 
+    persistentVolumeClaim:
+     claimName: pvc-one  # same as pvc
+
+ containers:
+  - name: cont1
+    image: nginx
+    ports:
+     - containerPort: 80
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+     - mountPath: /usr/share/nginx/html
+       name: vol1  # same as above section under volume 

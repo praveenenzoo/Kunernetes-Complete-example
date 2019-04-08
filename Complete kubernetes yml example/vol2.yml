@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+ labels:
+  type: local
+ name: registryvmm
+
+spec:
+ accessModes:
+ - ReadWriteOnce
+ capacity:
+  storage: 200Mi
+ hostPath:
+  path: /tmp/nginx
+ persistentVolumeReclaimPolicy: Retain

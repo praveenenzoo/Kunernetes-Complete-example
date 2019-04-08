@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+ name: appservicelb
+
+
+spec:
+ selector: 
+  name: app1
+ ports:
+  - protocol: TCP
+    port: 9999
+    targetPort: 80
+ type: LoadBalancer
+
+#  note LB also create Node port by default 

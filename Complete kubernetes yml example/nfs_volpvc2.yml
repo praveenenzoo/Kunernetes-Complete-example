@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ namespace: default
+ name: pvc-two
+
+spec:
+ accessModes:
+  - ReadWriteMany
+ resources:
+  requests:
+   storage: 30Mi
+
+

@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+ name: hostclaimpod
+
+
+spec:
+ volumes:
+  - name: vol1
+    persistentVolumeClaim:
+     claimName: vol1-claim
+
+ containers:
+  - name: cont1
+    image: nginx
+    ports:
+     - containerPort: 80
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+     - mountPath: /usr/share/nginx/html
+       name: vol1

@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+ name: firstpodreadines
+
+spec:
+ containers:
+  - name: cont2
+    image: simpleapp
+    imagePullPolicy: IfNotPresent
+    readinessProbe:
+     exec:
+      command:
+       - cat
+       - /tmp/healthy
+     periodSeconds: 5
+    resources: {}
+
+
+    
