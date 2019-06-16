@@ -1,0 +1,102 @@
+How to create Deplyment and expose to public
+Connecting Applications with Services
+Task Detail:
+    Exposing pods to the cluster
+    Creating a Service
+    Accessing the Service
+    Securing the Service
+    Exposing the Service
+-----------------Step-1-----------------------
+1st create dockerfile to create images and push to docker registry server steps:
+download html website sample code github
+
+git clone https://github.com/microsoft/project-html-website.git website
+
+Dockerfile Example
+FROM nginx
+COPY . /usr/share/nginx/html
+
+docker built -t web .
+docker run -itd -p 5000:80 --name site1 web
+docker tag web kube-registry.com:5000/web
+docker push  kube-registry.com:5000/web
+----------------------Step-2--------------------------
+create deployment.yml file
+
+[root@kube website]# cat deployment-service.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: website
+spec:
+ selector:
+   matchLabels:
+     run: website
+ replicas: 2
+ template:
+  metadata:
+   labels:
+     run: website
+  spec:
+     containers:
+     - name: website
+       image: kube-registry.com:5000/web
+       ports:
+       - containerPort: 80
+----------------Now Expose Port for outside -------------------
+
+[root@kube website]# kubectl get svc
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        28d
+website      LoadBalancer   10.105.138.50   <pending>     80:30014/TCP   5m31s
+
+kubectl expose deployment website --port=80 --type=LoadBalancer
+
+-----------------------------------
+
+# firewall-cmd --permanent --add-port=30014/tcp
+
+--------------------------Environment Variables
+
+When a Pod runs on a Node, the kubelet adds a set of environment variables for each active Service. This introduces an ordering problem. To see why, inspect the environment of your running nginx Pods (your Pod name will be different):
+[root@kube website]# kubectl get pods
+NAME                       READY   STATUS    RESTARTS   AGE
+website-59f8948bcc-72qj8   1/1     Running   0          16m
+website-59f8948bcc-hptzr   1/1     Running   0          16m
+[root@kube website]# kubectl exec website-59f8948bcc-72qj8 -- printenv | grep SERVICE
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_PORT_HTTPS=443
+[root@kube website]#
+------------------Check DNS----------
+kubectl get services kube-dns --namespace=kube-system
+
+-----------------------------Securing The Services--------------
+
+https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

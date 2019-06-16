@@ -1,0 +1,36 @@
+1} Create Pod And Expose With Service
+
+---Pod Yaml
+apiVersion: v1
+kind: Pod
+metadata:
+    name: first-app
+    labels:
+        app: first-app
+spec:
+    replicas: 2
+    selector:
+      matchLables:
+        app: first-app
+spec:
+    containers:
+    - name: demo-app
+      image: kube-registry.com:5000/nginx
+      ports:
+      - containerPort: 3000
+# kubectl create -f filename
+---------Expose Pod create svc--------------
+# kubectl expose pods first-app --port=80 --type=LoadBalancer
+
+--------- allow port firewalld----------
+# firewall-cmd --permanent --add-port=30434/tcp
+# firewalld-cmd --reload
+
+
+commands
+ 
+ kubectl get pods 
+ kubectl get pods -o wide
+ kubectl get svc 
+ kubectl get svc -o side 
+ 
